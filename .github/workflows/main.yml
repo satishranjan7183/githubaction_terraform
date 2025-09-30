@@ -4,6 +4,9 @@ on: workflow_dispatch
   #   branches:
   #     - 'main'
   #     - 'feature'
+permissions:
+  id-token: write
+  contents: read
 jobs:
   terraformjob:
     name: terraform job
