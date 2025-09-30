@@ -47,6 +47,7 @@ jobs:
         continue-on-error: true
         
   terraform-apply:
+    environment: dev
     runs-on: self-hosted
     needs: terraform-init-plan
     steps:
