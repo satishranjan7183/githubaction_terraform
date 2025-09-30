@@ -8,8 +8,8 @@ permissions:
   id-token: write
   contents: read
 jobs:
-  terraformjob:
-    name: terraform job
+  terraform-init-plan:
+    name: terraform init and plan
     runs-on: self-hosted
     steps:
       - name: Checkout
@@ -45,4 +45,29 @@ jobs:
         run: terraform plan
         working-directory: environment/dev  
         continue-on-error: true
-   
+        
+  terraform-apply:
+    runs-on: self-hosted
+    needs: terraform-init-plan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+      - name: Install Terraform
+        uses: little-core-labs/install-terraform@v2.0.0
+        with:
+          version: 1.13.0      
+      - name: Azure Login
+        uses: Azure/login@v2.3.0
+        with:
+          # ClientId of the Azure Service principal created.
+          client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
+          # TenantId of the Azure Service principal created.
+          tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
+          # Azure subscriptionId
+          subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
+      - name: Terraform apply
+        id: apply
+        run: terraform apply --auto-approve
+        continue-on-error: true
+        working-directory: environment/dev
+
