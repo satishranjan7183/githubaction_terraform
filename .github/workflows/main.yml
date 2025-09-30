@@ -19,7 +19,16 @@ jobs:
           client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
           tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
           subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
-            
+
+      - name: Export ARM Variables for Terraform
+        run: |
+          echo "ARM_CLIENT_ID=007db939-c185-484a-a2e4-10ab8bb8aa26" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=8839fa1a-72d2-4f19-8736-4c73cf13d7a6" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=38d52de4-2fb6-4a85-96fb-5ba22d363e4e" >> $GITHUB_ENV
+          # OIDC Authentication सुनिश्चित करने के लिए
+          echo "ARM_USE_OIDC=true" >> $GITHUB_ENV 
+          echo "ARM_USE_CLI=false" >> $GITHUB_ENV 
+          
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
