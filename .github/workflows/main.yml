@@ -25,6 +25,7 @@ jobs:
           client-secret: "Ik_8Q~BB57TJW8GMMbc2ExwfaN_DUb2NuS5qRcNf"
           subscription-id: "38d52de4-2fb6-4a85-96fb-5ba22d363e4e"
           tenant-id: "8839fa1a-72d2-4f19-8736-4c73cf13d7a6"
+          auth-type: service-principal
       - name: Terraform Init
         id: init
         env:
