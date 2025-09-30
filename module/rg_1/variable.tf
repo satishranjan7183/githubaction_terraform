@@ -1,3 +1,3 @@
-variable "rgmap" {
-    type = map(any)
-}
+variable "rg_name" {}
+variable "rg_location" {}
+variable "rg_tags" {}
