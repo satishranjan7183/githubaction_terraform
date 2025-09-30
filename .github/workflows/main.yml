@@ -6,7 +6,7 @@ jobs:
   terraform:
     name: 'Terraform'
     # Yeh job Ubuntu ke latest version par chalegi
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     # Environment variables jo Terraform ko Azure se connect karne ke liye chahiye
     # Inhe GitHub Repository ke Secrets mein store karna zaroori hai
