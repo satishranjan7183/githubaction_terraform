@@ -1,0 +1,11 @@
+name: "first-workflow"
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature'
+jobs:
+  terraforminit:
+    name: terraform init
+    runs-on: 
+      
