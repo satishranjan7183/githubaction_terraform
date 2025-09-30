@@ -27,6 +27,12 @@ jobs:
           tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
           # Azure subscriptionId
           subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init    
   #     - name: Terraform fmt
   #       id: fmt
   #       run: terraform fmt -check
