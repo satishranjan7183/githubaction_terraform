@@ -38,7 +38,7 @@ jobs:
         working-directory: environment/dev  
       - name: Terraform validate
         id: validate
-        run: terraform validate
+        run: terraform validate -no-color -input=false
         working-directory: environment/dev          
       - name: Terraform plan
         id: plan
