@@ -23,8 +23,7 @@ jobs:
           tenant-id: "8839fa1a-72d2-4f19-8736-4c73cf13d7a6"
       - name: terraform fmt
         id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
+        run: terraform fmt -recursive
         working-directory: ./environment/dev
        
 
