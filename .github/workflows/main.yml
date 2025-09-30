@@ -1,14 +1,14 @@
-name: "first-workflow"
-on:
-  push:
-    branches:
-      - 'main'
-      - 'feature'
+name: "Infra-Pipeline"
+on: workflow_dispatch
+  # push:
+  #   branches:
+  #     - 'main'
+  #     - 'feature'
 jobs:
-  terraforminit:
-    name: terraform init
+  terraformjob:
+    name: terraform job
     runs-on: self-hosted
     steps:
-      - name: dhondhu
-        run: echo "dhondhu"
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
       
