@@ -1,80 +1,52 @@
-name: "Dev Terraform Workflow"
+name: 'Terraform'
 
-on: workflow_dispatch  
+# Workflow kab trigger hoga (kab chalega)
+on: workflow_dispatch
+jobs:
+  terraform:
+    name: 'Terraform'
+    # Yeh job Ubuntu ke latest version par chalegi
+    runs-on: ubuntu-latest
 
-permissions:
-  id-token: write
-  contents: read
-  
-jobs: 
-  terraform-init-plan:
-    runs-on: self-hosted
-    steps: 
-      - name: Checkout
-        uses: actions/checkout@v5.0.0
-    
-      - name: Azure Login
-        uses: Azure/login@v2.3.0
-        with:
-          client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
-          tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
-          subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
+    # Environment variables jo Terraform ko Azure se connect karne ke liye chahiye
+    # Inhe GitHub Repository ke Secrets mein store karna zaroori hai
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
 
-      - name: Export ARM Variables for Terraform
-        run: |
-          echo "ARM_CLIENT_ID=007db939-c185-484a-a2e4-10ab8bb8aa26" >> $GITHUB_ENV
-          echo "ARM_TENANT_ID=8839fa1a-72d2-4f19-8736-4c73cf13d7a6" >> $GITHUB_ENV
-          echo "ARM_SUBSCRIPTION_ID=38d52de4-2fb6-4a85-96fb-5ba22d363e4e" >> $GITHUB_ENV
-          # OIDC Authentication सुनिश्चित करने के लिए
-          echo "ARM_USE_OIDC=true" >> $GITHUB_ENV 
-          echo "ARM_USE_CLI=false" >> $GITHUB_ENV 
-          
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-        working-directory: environment/dev
-        
-      - name: Terraform Init
-        id: init
-        run: terraform init -input=false
-        working-directory: environment/dev
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-        working-directory: environment/dev        
-      
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
-        working-directory: environment/dev    
-        
-  terraform-apply:    
-    runs-on: self-hosted
-    if: github.ref == 'refs/heads/main'
-    needs: terraform-init-plan
-    environment: dev
     steps:
+      # Step 1: Repository ka code runner machine par checkout (download) karta hai
       - name: Checkout
-        uses: actions/checkout@v5.0.0
-    
-      - name: Azure Login
-        uses: Azure/login@v2.3.0
-        with:
-          client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
-          tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
-          subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e   
-          
-      - name: Terraform Init
-        id: init
-        run: terraform init -input=false  
-        working-directory: environment/dev
+        uses: actions/checkout@v4
 
+      # Step 2: Terraform CLI ko runner par setup karta hai
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0 # Aap yahan specific version daal sakte hain
+
+      # Step 3: Terraform ko initialize karta hai (providers aur backend setup)
+      - name: Terraform Init
+        run: terraform init
+
+      # Step 4: Terraform code ko format ke liye check karta hai
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      # Step 5: Terraform code ko validate karta hai syntax errors ke liye
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Step 6: Terraform Plan (Sirf Pull Request ke liye chalega)
+      # Yeh batata hai ki kya changes apply honge, lekin apply nahi karta
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -input=false
+
+      # Step 7: Terraform Apply (Sirf 'main' branch mein push hone par chalega)
+      # Yeh actual mein changes ko Azure par apply karta hai
       - name: Terraform Apply
-        id: apply
-        run: terraform apply --auto-approve
-        continue-on-error: true
-        working-directory: environment/dev              
-          
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
