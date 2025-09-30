@@ -1,3 +1,0 @@
-rgmapmodule = {
-  rg = "west europe"
-}
