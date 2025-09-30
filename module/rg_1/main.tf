@@ -1,5 +1,5 @@
-resource "azurerm_resource_group" "rg1" {
-    for_each = var.rgmap
-    name = each.key
-    location = each.value
+resource "azurerm_resource_group" "rg" {
+  name     = var.rg_name
+  location = var.rg_location
+  tags     = var.rg_tags
 }
