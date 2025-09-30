@@ -1,32 +1,77 @@
-name: "Infra-Pipeline"
-on: workflow_dispatch
-  # push:
-  #   branches:
-  #     - 'main'
-  #     - 'feature'
+name: "Dev Terraform Workflow"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main      
+
 permissions:
   id-token: write
   contents: read
-jobs:
+  
+jobs: 
   terraform-init-plan:
-    name: terraform init and plan
     runs-on: self-hosted
-    steps:
+    steps: 
       - name: Checkout
-        uses: actions/checkout@v5.0.0   
+        uses: actions/checkout@v5.0.0
+    
       - name: Azure Login
         uses: Azure/login@v2.3.0
         with:
-          client-id: "007db939-c185-484a-a2e4-10ab8bb8aa26"
-          # client-secret: "Ik_8Q~BB57TJW8GMMbc2ExwfaN_DUb2NuS5qRcNf"
-          subscription-id: "38d52de4-2fb6-4a85-96fb-5ba22d363e4e"
-          tenant-id: "8839fa1a-72d2-4f19-8736-4c73cf13d7a6"
-      - name: terraform fmt
+          client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
+          tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
+          subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
+            
+      - name: Terraform fmt
         id: fmt
-        run: terraform fmt -recursive
-        working-directory: ./environment/dev
-      - name: terraform init
+        run: terraform fmt -check
+        continue-on-error: true
+        working-directory: environment/dev
+        
+      - name: Terraform Init
         id: init
-        run: terraform init
-        working-directory: ./environment/dev     
+        run: terraform init -input=false  
+        working-directory: environment/dev
 
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: environments/dev        
+      
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+        working-directory: environment/dev    
+        
+  terraform-apply:    
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
+    needs: terraform-init-plan
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+    
+      - name: Azure Login
+        uses: Azure/login@v2.3.0
+        with:
+          client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
+          tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
+          subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e   
+          
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false  
+        working-directory: environments/dev
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply --auto-approve
+        continue-on-error: true
+        working-directory: environments/dev              
+          
