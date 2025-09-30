@@ -32,10 +32,10 @@ jobs:
   #       run: terraform fmt -check
   #       continue-on-error: true
   #       working-directory: environment/dev
-  #     - name: Terraform init
-  #       id: init
-  #       run: terraform init
-  #       working-directory: environment/dev  
+      - name: Terraform init
+        id: init
+        run: terraform init
+        working-directory: environment/dev  
   #     - name: Terraform validate
   #       id: validate
   #       run: terraform validate -no-color -input=false
