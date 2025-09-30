@@ -32,16 +32,18 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        run: terraform init    
+        id: init
+        run: terraform init
+        working-directory: environment/dev  
   #     - name: Terraform fmt
   #       id: fmt
   #       run: terraform fmt -check
   #       continue-on-error: true
   #       working-directory: environment/dev
-      - name: Terraform init
-        id: init
-        run: terraform init
-        working-directory: environment/dev  
+      # - name: Terraform init
+      #   id: init
+      #   run: terraform init
+      #   working-directory: environment/dev  
   #     - name: Terraform validate
   #       id: validate
   #       run: terraform validate -no-color -input=false
