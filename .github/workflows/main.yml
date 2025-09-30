@@ -30,17 +30,17 @@ jobs:
       # Step 3: Terraform ko initialize karta hai (providers aur backend setup)
       - name: Terraform Init
         run: terraform init
-        working-directory: ./environment/dev
+        working-directory: "."
 
       # Step 4: Terraform code ko format ke liye check karta hai
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: ./environment/dev
+        working-directory: "."
 
       # Step 5: Terraform code ko validate karta hai syntax errors ke liye
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./environment/dev
+        working-directory: "."
 
       # Step 6: Terraform Plan (Sirf Pull Request ke liye chalega)
       # Yeh batata hai ki kya changes apply honge, lekin apply nahi karta
@@ -53,4 +53,4 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
-        working-directory: ./environment/dev
+        working-directory: "."
