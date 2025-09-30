@@ -21,10 +21,10 @@ jobs:
           # client-secret: "Ik_8Q~BB57TJW8GMMbc2ExwfaN_DUb2NuS5qRcNf"
           subscription-id: "38d52de4-2fb6-4a85-96fb-5ba22d363e4e"
           tenant-id: "8839fa1a-72d2-4f19-8736-4c73cf13d7a6"
-      - name: Azure CLI script
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
+      - name: terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+        working-directory: ./environment/dev
+       
 
