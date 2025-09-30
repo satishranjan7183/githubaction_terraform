@@ -17,9 +17,8 @@ backend "azurerm" {
 provider "azurerm" {
   features {}
   subscription_id = "38d52de4-2fb6-4a85-96fb-5ba22d363e4e"
-  use_cli              = false 
-  use_oidc             = true 
 }
+
 
 
 
