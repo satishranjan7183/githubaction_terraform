@@ -24,10 +24,10 @@ jobs:
           # client-id: 007db939-c185-484a-a2e4-10ab8bb8aa26
           # tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
           # subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
-          ARM_CLIENT_ID: "f72f924c-5aa6-4e12-936d-2890cea66164"
-          ARM_CLIENT_SECRET: "Ik_8Q~BB57TJW8GMMbc2ExwfaN_DUb2NuS5qRcNf"
-          ARM_SUBSCRIPTION_ID: "38d52de4-2fb6-4a85-96fb-5ba22d363e4e"
-          ARM_TENANT_ID: "8839fa1a-72d2-4f19-8736-4c73cf13d7a6"
+          client-id: "f72f924c-5aa6-4e12-936d-2890cea66164"
+          client-secret: "Ik_8Q~BB57TJW8GMMbc2ExwfaN_DUb2NuS5qRcNf"
+          subscription-id: "38d52de4-2fb6-4a85-96fb-5ba22d363e4e"
+          tenant-id: "8839fa1a-72d2-4f19-8736-4c73cf13d7a6"
 
       # - name: Setup Terraform
       #   uses: hashicorp/setup-terraform@v2.0.3
