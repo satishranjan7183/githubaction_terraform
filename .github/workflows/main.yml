@@ -34,7 +34,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: githubaction_terraform/githubaction_terraform/environment/dev  
+        working-directory: ./environment/dev  
   #     - name: Terraform fmt
   #       id: fmt
   #       run: terraform fmt -check
