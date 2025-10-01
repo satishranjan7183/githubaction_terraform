@@ -4,7 +4,10 @@
       # push:
       #   branches:
       #     - main # Trigger on push to main branch
-
+    permissions:
+      id-token: write
+      contents: read
+    
     jobs:
       terraform:
         runs-on: self-hosted
