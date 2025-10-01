@@ -78,13 +78,11 @@ jobs:
 
 
 # name: Azure Terraform CI/CD
-
 # on:
 #   workflow_dispatch:
 #   # push:
 #   #   branches:
 #   #     - main
-  
   # terraform-apply:    
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/main'
@@ -93,7 +91,6 @@ jobs:
   #   steps:
   #    - name: Checkout
   #      uses: actions/checkout@v5.0.0
-    
   #    # - name: Azure Login
   #    #   uses: azure/login@v2
   #    #   with:
@@ -101,13 +98,11 @@ jobs:
   #    #     tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
   #    #     subscription-id: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
   #    #     client-secret: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-  #    #     auth-type: id-token
-          
+  #    #     auth-type: id-token     
   #    - name: Terraform Init
   #      id: init
   #      run: terraform init -input=false  
   #      working-directory: environment/dev
-
   #    - name: Terraform Apply
   #      id: apply
   #      run: terraform apply --auto-approve
