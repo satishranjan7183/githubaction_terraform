@@ -16,7 +16,7 @@
             uses: hashicorp/setup-terraform@v3
 
           - name: Terraform Init
-            run: terraform init -backend-config="resource_group_name=${{ secrets.AZURE_AD_CLIENT_ID }}" -backend-config="storage_account_name=${{ secrets.AZURE_AD_CLIENT_SECRET }}" -backend-config="container_name=${{ secrets.AZURE_AD_TENANT_ID }}" -backend-config="key=terraform.tfstate"
+            run: terraform init 
             env:
               ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
               ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
