@@ -36,12 +36,14 @@ jobs:
       # ✅ Terraform Init
       - name: Terraform Init
         run: terraform init
-        working-directory: ./
+        # working-directory: ./
+        working-directory: environment/dev
 
       # ✅ Terraform Plan
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./
+         # working-directory: ./
+        working-directory: environment/dev
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
@@ -51,7 +53,8 @@ jobs:
       # ✅ Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ./
+        # working-directory: ./
+        working-directory: environment/dev
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
