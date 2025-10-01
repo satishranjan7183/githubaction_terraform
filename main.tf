@@ -6,14 +6,6 @@ terraform {
       version = "~> 3.0.2"
     }
   }
-  cloud {
-#    organization = "CloudQuickLabs"
-    organization = "satishranjan7183"
-    workspaces {
-#      name = "AzureLabs"
-      name = "azurelab"
-    }
-  }
 }
 
 provider "azurerm" {
