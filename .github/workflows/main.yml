@@ -20,13 +20,20 @@ jobs:
           terraform_version: 1.7.0
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      # 3️⃣ Ensure Azure CLI is in PATH (temporary for this runner session)
+      # # 3️⃣ Ensure Azure CLI is in PATH (temporary for this runner session)
+      # - name: Add Azure CLI to PATH
+      #   shell: pwsh
+      #   run: |
+      #     $env:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
+      #     Write-Host "Updated PATH: $env:PATH"
+      #     az --version
       - name: Add Azure CLI to PATH
-        shell: pwsh
+        shell: powershell
         run: |
           $env:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
           Write-Host "Updated PATH: $env:PATH"
           az --version
+ 
 
       # 4️⃣ Terraform Init
       - name: Terraform Init
