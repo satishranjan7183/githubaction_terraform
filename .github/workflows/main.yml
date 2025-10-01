@@ -2,34 +2,48 @@ name: "Terraform-Plan-Infra-Plan"
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - FeatureBranch1
 
 jobs:
   terraform:
     name: "Terraform"
-    runs-on: self-hosted
-    
+    runs-on: self-hosted  # Self-hosted Windows runner
+
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Optional: Setup Terraform if not installed on self-hosted runner
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 1.7.0
-      #     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      # 2️⃣ Setup Terraform (optional if already installed on runner)
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.0
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      # 3️⃣ Ensure Azure CLI is in PATH (temporary for this runner session)
+      - name: Add Azure CLI to PATH
+        shell: pwsh
+        run: |
+          $env:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
+          Write-Host "Updated PATH: $env:PATH"
+          az --version
+
+      # 4️⃣ Terraform Init
       - name: Terraform Init
-        id: init
         env:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform init
 
+      # 5️⃣ Terraform Plan
       - name: Terraform Plan
-        id: plan
         env:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform plan -no-color
