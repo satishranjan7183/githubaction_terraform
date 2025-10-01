@@ -44,19 +44,19 @@ jobs:
         run: terraform plan
          # working-directory: ./
         working-directory: environment/dev
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
+        # env:
+        #   ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+        #   ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+        #   ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+        #   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
 
       # ✅ Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
         # working-directory: ./
         working-directory: environment/dev
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
+        # env:
+        #   ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+        #   ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+        #   ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+        #   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
