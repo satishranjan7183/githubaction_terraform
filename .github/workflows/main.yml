@@ -2,9 +2,6 @@ name: Azure Terraform CI/CD
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
   
 permissions:
   id-token: write
@@ -18,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Login to Azure using Service Principal
+      # ✅ Login to Azure using Service Principal, first federation key
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -36,32 +33,14 @@ jobs:
       # ✅ Terraform Init
       - name: Terraform Init
         run: terraform init
-        # working-directory: ./
         working-directory: environment/dev
 
       # ✅ Terraform Plan
       - name: Terraform Plan
         run: terraform plan
-         # working-directory: ./
         working-directory: environment/dev
-        # env:
-        #   ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-        #   ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-        #   ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-        #   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
-
-      # # ✅ Terraform Apply
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve
-      #   # working-directory: ./
-      #   working-directory: environment/dev
-      #   # env:
-      #   #   ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-      #   #   ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      #   #   ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-      #   #   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
-
-  terraform-init-plan2:
+  
+  terraform-apply:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs: terraform-init-plan
@@ -97,6 +76,15 @@ jobs:
          # working-directory: ./
         working-directory: environment/dev
 
+
+# name: Azure Terraform CI/CD
+
+# on:
+#   workflow_dispatch:
+#   # push:
+#   #   branches:
+#   #     - main
+  
   # terraform-apply:    
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/main'
@@ -124,4 +112,14 @@ jobs:
   #      id: apply
   #      run: terraform apply --auto-approve
   #      continue-on-error: true
-  #      working-directory: environment/dev             
+  #      working-directory: environment/dev   
+        # # ✅ Terraform Apply
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve
+      #   # working-directory: ./
+      #   working-directory: environment/dev
+      #   # env:
+      #   #   ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      #   #   ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      #   #   ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+      #   #   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
