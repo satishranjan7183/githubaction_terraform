@@ -13,7 +13,7 @@
             uses: actions/checkout@v4
 
           - name: Setup Terraform
-            uses: hashicorp/setup-terraform@v3
+            uses: hashicorp/setup-terraform@v4
           - name: Azure login
             uses: azure/login@v2
             with:
