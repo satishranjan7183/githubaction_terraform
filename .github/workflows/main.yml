@@ -17,6 +17,7 @@
 
           - name: Terraform Init
             run: terraform init 
+            working-directory: ./
             env:
               ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
               ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
@@ -25,6 +26,7 @@
 
           - name: Terraform Plan
             run: terraform plan
+            working-directory: ./
             env:
               ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
               ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
@@ -32,6 +34,7 @@
               ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
           - name: Terraform Apply
+            working-directory: ./
             run: terraform apply -auto-approve
             env:
               ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
