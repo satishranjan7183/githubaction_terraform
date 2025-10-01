@@ -1,57 +1,40 @@
-name: "Terraform-Plan-Infra-Plan"
+    name: Azure Terraform CI/CD
 
-on:
-  workflow_dispatch:
+    on: workflow_dispatch
+      # push:
+      #   branches:
+      #     - main # Trigger on push to main branch
 
-jobs:
-  terraform:
-    name: "Terraform"
-    runs-on: self-hosted  # Self-hosted Windows runner
+    jobs:
+      terraform:
+        runs-on: self-hosted
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
 
-    steps:
-      # 1️⃣ Checkout repo
-      - name: Checkout
-        uses: actions/checkout@v3
+          - name: Setup Terraform
+            uses: hashicorp/setup-terraform@v3
 
-      # 2️⃣ Setup Terraform (optional if already installed on runner)
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.7.0
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          - name: Terraform Init
+            run: terraform init -backend-config="resource_group_name=${{ secrets.AZURE_AD_CLIENT_ID }}" -backend-config="storage_account_name=${{ secrets.AZURE_AD_CLIENT_SECRET }}" -backend-config="container_name=${{ secrets.AZURE_AD_TENANT_ID }}" -backend-config="key=terraform.tfstate"
+            env:
+              ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+              ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+              ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+              ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # # 3️⃣ Ensure Azure CLI is in PATH (temporary for this runner session)
-      # - name: Add Azure CLI to PATH
-      #   shell: pwsh
-      #   run: |
-      #     $env:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
-      #     Write-Host "Updated PATH: $env:PATH"
-      #     az --version
-      - name: Add Azure CLI to PATH
-        shell: powershell
-        run: |
-          $env:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
-          Write-Host "Updated PATH: $env:PATH"
-          az --version
- 
+          - name: Terraform Plan
+            run: terraform plan
+            env:
+              ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+              ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+              ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+              ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # 4️⃣ Terraform Init
-      - name: Terraform Init
-        env:
-          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        run: terraform init
-        working-directory: ./
-
-      # 5️⃣ Terraform Plan
-      - name: Terraform Plan
-        env:
-          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        run: terraform plan -no-color
+          - name: Terraform Apply
+            run: terraform apply -auto-approve
+            env:
+              ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+              ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+              ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+              ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
